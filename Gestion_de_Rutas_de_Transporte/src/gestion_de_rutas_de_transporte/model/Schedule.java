@@ -1,15 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package gestion_de_rutas_de_transporte;
-
 /**
  * Clase que representa un horario en el sistema.
- * Incluye identificador, id de ruta asociada y hora.
+ * Incluye identificador, ID de ruta asociada y hora en formato string.
  * @author Elian
  */
+package gestion_de_rutas_de_transporte.model;
+
+
 public class Schedule {
     private int id;
     private int routeId;
@@ -75,11 +71,20 @@ public class Schedule {
         this.time = time;
     }
 
+    /**
+     * Retorna una representación en string del horario.
+     * @return String con detalles del horario.
+     */
     @Override
     public String toString() {
         return "Schedule{" + "id=" + id + ", routeId=" + routeId + ", time='" + time + '\'' + '}';
     }
 
+    /**
+     * Compara si dos horarios son iguales por ID.
+     * @param obj Objeto a comparar.
+     * @return true si iguales, false otherwise.
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;

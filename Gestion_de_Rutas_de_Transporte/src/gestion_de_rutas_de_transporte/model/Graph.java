@@ -1,21 +1,27 @@
-// Graph.java (Modificada para aristas ponderadas, Dijkstra, ruta más larga y soporte para dibujo)
-package gestion_de_rutas_de_transporte;
-
-import java.util.HashSet;
-import java.util.PriorityQueue;
-import java.util.Random;
-
 /**
  * Clase que representa un grafo para modelar las conexiones entre paradas.
- * Utiliza listas de adyacencia implementadas con CustomLinkedList<Pair<vecino, peso>>.
- * Justificación: Los grafos son ideales para redes de transporte, permitiendo planificación de rutas eficiente con Dijkstra (corta) y backtracking (larga).
+ * Utiliza listas de adyacencia implementadas con CustomLinkedList<Pair<vecino, peso>> para aristas ponderadas.
+ * Soporta adición/eliminación de vértices y aristas, rutas más cortas (Dijkstra) y más largas (backtracking).
+ * Compone un arreglo de listas de adyacencia y constantes para límites.
  * @author Elian
  */
+package gestion_de_rutas_de_transporte.model;
+
+
+import gestion_de_rutas_de_transporte.utils.CustomLinkedList;
+import java.util.HashSet;
+import java.util.PriorityQueue;
+
+
+
 public class Graph {
     public static final int MAX_STOPS = 100;
     public CustomLinkedList<Pair<Integer, Integer>>[] adjacency;
     private int numStops;
 
+    /**
+     * Constructor del grafo. Inicializa el arreglo de listas de adyacencia.
+     */
     @SuppressWarnings("unchecked")
     public Graph() {
         adjacency = new CustomLinkedList[MAX_STOPS];
@@ -25,6 +31,10 @@ public class Graph {
         numStops = 0;
     }
 
+    /**
+     * Elimina una parada (vértice) y todas las aristas conectadas a ella.
+     * @param id ID de la parada a eliminar.
+     */
     public void removeStop(int id) {
     if (id < 1 || id > MAX_STOPS) return;
     
@@ -51,12 +61,22 @@ public class Graph {
     }
 }
     
+    /**
+     * Agrega una parada (vértice) al grafo.
+     * @param id ID de la parada.
+     */
     public void addStop(int id) {
         if (id > 0 && id <= MAX_STOPS) {
             numStops = Math.max(numStops, id);
         }
     }
 
+    /**
+     * Agrega una arista ponderada no dirigida entre dos paradas, evitando duplicados.
+     * @param from ID de origen.
+     * @param to ID de destino.
+     * @param peso Peso de la arista.
+     */
     public void addEdge(int from, int to, int peso) {
     if (from < 1 || from > numStops || to < 1 || to > numStops || from == to) {
         return;
@@ -82,6 +102,13 @@ public class Graph {
     adjacency[to - 1].add(new Pair<>(from, peso));
 }
 
+    
+/**
+* Actualiza el peso de la arista inversa.
+* @param from ID de origen inverso.
+* @param to ID de destino inverso.
+* @param newWeight Nuevo peso.
+*/
 private void updateReverseWeight(int from, int to, int newWeight) {
     Node<Pair<Integer, Integer>> current = adjacency[from - 1].head;
     while (current != null) {
@@ -94,6 +121,12 @@ private void updateReverseWeight(int from, int to, int newWeight) {
 }
 
     // Ruta más corta usando Dijkstra
+    /**
+     * Encuentra la ruta más corta entre dos paradas usando Dijkstra.
+     * @param start ID de inicio.
+     * @param end ID de fin.
+     * @return Lista de IDs en la ruta o lista vacía si no hay ruta.
+     */
     public CustomLinkedList<Integer> findPath(int start, int end) {
         if (start < 1 || start > numStops || end < 1 || end > numStops) {
             return new CustomLinkedList<>();
@@ -146,7 +179,12 @@ private void updateReverseWeight(int from, int to, int newWeight) {
         return reversedPath;
     }
 
-    // Ruta más larga usando backtracking (asumiendo grafo acíclico)
+    /**
+     * Encuentra la ruta más larga entre origen y destino usando backtracking (asumiendo grafo acíclico).
+     * @param origen ID de origen.
+     * @param destino ID de destino.
+     * @return Lista de IDs en la ruta más larga.
+     */
     public CustomLinkedList<Integer> longestPath(int origen, int destino) {
         CustomLinkedList<Integer> maxPath = new CustomLinkedList<>();
         int[] maxWeight = {Integer.MIN_VALUE};
@@ -156,6 +194,16 @@ private void updateReverseWeight(int from, int to, int newWeight) {
         return maxPath;
     }
 
+    /**
+     * Método recursivo auxiliar para encontrar la ruta más larga mediante backtracking.
+     * @param current Nodo actual.
+     * @param dest Destino.
+     * @param visited Conjunto de visitados.
+     * @param path Ruta actual.
+     * @param currentWeight Peso actual.
+     * @param maxPath Ruta máxima encontrada.
+     * @param maxWeight Peso máximo.
+     */
     private void findLongestPath(int current, int dest, HashSet<Integer> visited, CustomLinkedList<Integer> path, int currentWeight,
                                  CustomLinkedList<Integer> maxPath, int[] maxWeight) {
         visited.add(current);
@@ -187,5 +235,15 @@ private void updateReverseWeight(int from, int to, int newWeight) {
 
         visited.remove(current);
         path.remove(current);
+    }
+
+    /**
+     * Encuentra la ruta más corta (pendiente de implementación).
+     * @param origen ID de origen.
+     * @param destino ID de destino.
+     * @return Lista de IDs en la ruta.
+     */
+    public CustomLinkedList<Integer> shortestPath(int origen, int destino) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

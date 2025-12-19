@@ -1,16 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package gestion_de_rutas_de_transporte;
-
 /**
  * Clase genérica que implementa una cola utilizando nodos enlazados.
- * Se utiliza en el algoritmo BFS del grafo.
+ * Se utiliza en algoritmos como BFS en el grafo.
+ * Compone referencias al frente y final de la cola.
  * @param <T> Tipo de dato en la cola.
  * @author Elian
  */
+package gestion_de_rutas_de_transporte.utils;
+
+import gestion_de_rutas_de_transporte.model.Node;
+
 public class CustomQueue<T> {
     private Node<T> front;
     private Node<T> rear;

@@ -1,18 +1,17 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package gestion_de_rutas_de_transporte;
-
 /**
  * Clase que implementa el algoritmo de ordenamiento Burbuja.
- * Se utiliza para ordenar las paradas por nombre alfabéticamente.
+ * Se utiliza para ordenar listas enlazadas de paradas por nombre alfabéticamente.
  * @author Elian
  */
+package gestion_de_rutas_de_transporte.utils;
+
+import gestion_de_rutas_de_transporte.utils.CustomLinkedList;
+import gestion_de_rutas_de_transporte.model.Stop;
+
 public class Sorter {
     /**
      * Ordena una lista enlazada de paradas utilizando el algoritmo de burbuja.
+     * Convierte temporalmente a arreglo para ordenar y reconstruye la lista.
      * @param list Lista enlazada de paradas a ordenar.
      */
     public static void bubbleSort(CustomLinkedList<Stop> list) {

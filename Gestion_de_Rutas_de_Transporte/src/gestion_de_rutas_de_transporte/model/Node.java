@@ -1,15 +1,12 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package gestion_de_rutas_de_transporte;
-
 /**
  * Clase genérica que representa un nodo en una lista enlazada o cola.
+ * Contiene un dato genérico y una referencia al siguiente nodo.
  * @param <T> Tipo de dato almacenado en el nodo.
  * @author Elian
  */
+package gestion_de_rutas_de_transporte.model;
+
+
 public class Node<T> {
     private T data;
     private Node<T> next;

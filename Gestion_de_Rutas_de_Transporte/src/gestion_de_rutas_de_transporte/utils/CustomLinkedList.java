@@ -1,19 +1,22 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package gestion_de_rutas_de_transporte;
-
 /**
  * Clase genérica que implementa una lista enlazada simple.
  * Se utiliza para almacenar paradas, rutas, horarios y listas de adyacencia en el grafo.
- * Justificación: Las listas enlazadas son eficientes para inserciones y eliminaciones en secuencias como paradas en rutas.
+ * Soporta operaciones como agregar, remover, buscar, iterar y convertir a arreglo.
+ * Compone un nodo cabeza y un contador de tamaño.
  * @param <T> Tipo de dato en la lista.
  * @author Elian
  */
+package gestion_de_rutas_de_transporte.utils;
+
+import gestion_de_rutas_de_transporte.model.Node;
+import gestion_de_rutas_de_transporte.model.Pair;
+import gestion_de_rutas_de_transporte.model.Schedule;
+import gestion_de_rutas_de_transporte.model.Route;
+import gestion_de_rutas_de_transporte.model.Stop;
+import java.util.function.Consumer;
+
 public class CustomLinkedList<T> {
-    Node<T> head;
+    public Node<T> head;
     private int size;
 
     /**
@@ -23,6 +26,18 @@ public class CustomLinkedList<T> {
         head = null;
         size = 0;
     }
+    
+    /**
+     * Itera sobre la lista aplicando una acción a cada elemento.
+     * @param action Acción a aplicar.
+     */
+    public void iterate(Consumer<T> action) {
+    Node<T> current = head;
+    while (current != null) {
+        action.accept(current.getData());
+        current = current.getNext();
+    }
+}
 
     /**
      * Agrega un elemento al final de la lista.
@@ -82,6 +97,12 @@ public class CustomLinkedList<T> {
         return null;
     }
 
+    /**
+     * Verifica si un dato coincide con la clave (para tipos específicos como Stop, Route, etc.).
+     * @param data Dato a verificar.
+     * @param key Clave.
+     * @return true si coincide.
+     */
     private boolean matches(T data, Object key) {
         if (data instanceof Stop && key instanceof Integer) {
             return ((Stop) data).getId() == (Integer) key;
@@ -151,6 +172,21 @@ public class CustomLinkedList<T> {
         }
         return array;
     }
+    
+    /**
+     * Busca un elemento por clave entera (para compatibilidad).
+     * @param key Clave entera.
+     * @return Elemento encontrado o null.
+     */
+    public T search(int key) {
+    Node<T> current = head;
+    while (current != null) {
+        if (current.getData() instanceof Stop && ((Stop) current.getData()).getId() == key) return current.getData();
+        // Similar para Route y Schedule
+        current = current.getNext();
+    }
+    return null;
+}
 
     /**
      * Reconstruye la lista desde un arreglo.
@@ -161,5 +197,13 @@ public class CustomLinkedList<T> {
         for (T item : array) {
             add(item);
         }
+    }
+
+    /**
+     * Obtiene el nodo cabeza de la lista.
+     * @return Nodo cabeza.
+     */
+    public Node<T> getHead() {
+    return head;  // Simplemente retorna el head
     }
 }

@@ -1,20 +1,19 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package gestion_de_rutas_de_transporte;
-
 /**
  * Clase que representa una ruta en el sistema.
- * Incluye identificador, nombre y una lista de ids de paradas.
+ * Incluye identificador, nombre, lista de IDs de paradas y un color para visualización.
  * @author Elian
  */
+package gestion_de_rutas_de_transporte.model;
+
+import gestion_de_rutas_de_transporte.utils.CustomLinkedList;
+import java.awt.Color;
+
+
 public class Route {
     private int id;
     private String name;
     private CustomLinkedList<Integer> stopIds;
-
+    private Color color;  // Color de la ruta
     /**
      * Constructor de la clase Route.
      * @param id Identificador único de la ruta.
@@ -25,6 +24,8 @@ public class Route {
         this.name = name;
         this.stopIds = new CustomLinkedList<>();
     }
+    
+    
 
     /**
      * Obtiene el identificador de la ruta.
@@ -49,6 +50,14 @@ public class Route {
     public String getName() {
         return name;
     }
+    
+    /**
+     * Obtiene el color de la ruta.
+     * @return Color de la ruta.
+     */
+    public Color getColor() {
+    return color;
+}
 
     /**
      * Establece el nombre de la ruta.
@@ -57,6 +66,15 @@ public class Route {
     public void setName(String name) {
         this.name = name;
     }
+    
+    /**
+     * Establece el color de la ruta.
+     * @param color Nuevo color.
+     */
+    public void setColor(Color color) {
+    this.color = color;
+}
+    
 
     /**
      * Obtiene la lista de ids de paradas en la ruta.
@@ -66,11 +84,20 @@ public class Route {
         return stopIds;
     }
 
+    /**
+     * Retorna una representación en string de la ruta.
+     * @return String con detalles de la ruta.
+     */
     @Override
     public String toString() {
         return "Route{" + "id=" + id + ", name='" + name + "', stops=" + stopIds + '}';
     }
 
+    /**
+     * Compara si dos rutas son iguales por ID.
+     * @param obj Objeto a comparar.
+     * @return true si iguales, false otherwise.
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;

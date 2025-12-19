@@ -1,0 +1,83 @@
+STOPS
+1,Belén (Heredia),50,50
+2,Metroplaza/Multiplaza Rosa,150,60
+3,DEMASA/Santa Rosa,250,70
+4,PECOSA/Santo Reina,350,80
+5,Estación del Atlántico,450,90
+6,Ambos Mares,550,100
+7,San Pedro (UCR),650,110
+8,Universidad Latina,750,120
+9,Curridabat,850,130
+10,Tres Rios,950,140
+11,Pavas,50,200
+12,Aya (Contraloria),150,210
+13,Sabana (La Salle/MAGI),250,220
+14,Sabana (Cementerio),350,230
+15,Estación del Pacífico,450,240
+16,Plaza Gonzalez Viquez,550,250
+17,Cartago (extensión),650,260
+18,Jack's,750,270
+19,Procuraduría,850,280
+1,Belén (Heredia),50,50
+2,Metroplaza/Multiplaza Rosa,150,60
+3,DEMASA/Santa Rosa,250,70
+4,PECOSA/Santo Reina,350,80
+5,Estación del Atlántico,450,90
+6,Ambos Mares,550,100
+7,San Pedro (UCR),650,110
+8,Universidad Latina,750,120
+9,Curridabat,850,130
+10,Tres Rios,950,140
+11,Pavas,50,200
+12,Aya (Contraloria),150,210
+13,Sabana (La Salle/MAGI),250,220
+14,Sabana (Cementerio),350,230
+15,Estación del Pacífico,450,240
+16,Plaza Gonzalez Viquez,550,250
+17,Cartago (extensión),650,260
+18,Jack's,750,270
+19,Procuraduría,850,280
+ROUTES
+1,Belén - Tres Rios,255;0;0,STOPS:1;2;3;4;5;6;7;8;9;10;
+2,Estación del Atlántico - Curridabat,255;200;0,STOPS:5;18;19;9;
+3,Pavas - Cartago,0;255;0,STOPS:11;12;13;14;15;16;17;
+SCHEDULES
+1,1,08:00
+2,2,09:00
+EDGES
+1,2,5
+2,1,5
+2,3,5
+3,2,5
+3,4,5
+4,3,5
+4,5,5
+5,4,5
+5,6,5
+5,18,7
+6,5,5
+6,7,5
+7,6,5
+7,8,5
+8,7,5
+8,9,5
+9,8,5
+9,10,5
+9,19,7
+10,9,5
+11,12,6
+12,11,6
+12,13,6
+13,12,6
+13,14,6
+14,13,6
+14,15,6
+15,14,6
+15,16,6
+16,15,6
+16,17,6
+17,16,6
+18,5,7
+18,19,7
+19,9,7
+19,18,7
