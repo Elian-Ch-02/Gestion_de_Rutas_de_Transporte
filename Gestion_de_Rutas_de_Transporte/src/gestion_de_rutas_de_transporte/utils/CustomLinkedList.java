@@ -13,6 +13,7 @@ import gestion_de_rutas_de_transporte.model.Pair;
 import gestion_de_rutas_de_transporte.model.Schedule;
 import gestion_de_rutas_de_transporte.model.Route;
 import gestion_de_rutas_de_transporte.model.Stop;
+import java.lang.reflect.Array;
 import java.util.function.Consumer;
 
 public class CustomLinkedList<T> {
@@ -206,4 +207,21 @@ public class CustomLinkedList<T> {
     public Node<T> getHead() {
     return head;  // Simplemente retorna el head
     }
+    
+    /**
+ * Convierte la lista a un arreglo usando reflexión para el tipo correcto.
+ * @param clazz Clase del tipo T (e.g., Stop.class).
+ * @return Arreglo de elementos.
+ */
+@SuppressWarnings("unchecked")
+public T[] toArray(Class<T> clazz) {
+    T[] array = (T[]) Array.newInstance(clazz, size);
+    Node<T> current = head;
+    int i = 0;
+    while (current != null) {
+        array[i++] = current.getData();
+        current = current.getNext();
+    }
+    return array;
+}
 }

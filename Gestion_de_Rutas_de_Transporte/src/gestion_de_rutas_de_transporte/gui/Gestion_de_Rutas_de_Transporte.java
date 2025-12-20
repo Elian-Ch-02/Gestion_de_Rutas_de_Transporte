@@ -298,22 +298,26 @@ public class Gestion_de_Rutas_de_Transporte extends JFrame {
     * Muestra todos los elementos (paradas, rutas, horarios) en un diálogo con área de texto scrollable.
     */
     private void showAll() {
-       StringBuilder sb = new StringBuilder();
-        sb.append("Paradas:\n");
-        for (int i = 0; i < stops.getSize(); i++) {
-            sb.append(stops.getAt(i)).append("\n");
-        }
-        sb.append("\nRutas:\n");
-        for (int i = 0; i < routes.getSize(); i++) {
-            sb.append(routes.getAt(i)).append("\n");
-        }
-        sb.append("\nHorarios:\n");
-        for (int i = 0; i < schedules.getSize(); i++) {
-            sb.append(schedules.getAt(i)).append("\n");
-        }
-        outputArea.setText(sb.toString());
-        outputArea.setCaretPosition(0);  // Scroll al inicio
+    showAll("");  // Llama a la versión con prefijo vacío
+}
+
+private void showAll(String prefix) {
+    StringBuilder sb = new StringBuilder(prefix);
+    sb.append("Paradas:\n");
+    for (int i = 0; i < stops.getSize(); i++) {
+        sb.append(stops.getAt(i)).append("\n");
     }
+    sb.append("\nRutas:\n");
+    for (int i = 0; i < routes.getSize(); i++) {
+        sb.append(routes.getAt(i)).append("\n");
+    }
+    sb.append("\nHorarios:\n");
+    for (int i = 0; i < schedules.getSize(); i++) {
+        sb.append(schedules.getAt(i)).append("\n");
+    }
+    outputArea.setText(sb.toString());
+    outputArea.setCaretPosition(0);  // Scroll al inicio
+}
 
     /**
     * Busca un elemento (parada, ruta o horario) por tipo e ID, y muestra el resultado en el área de salida.
@@ -361,42 +365,89 @@ public class Gestion_de_Rutas_de_Transporte extends JFrame {
     }
     
     /**
-    * Planifica una ruta corta o larga entre origen y destino, muestra el resultado y resalta en el panel de dibujo.
+    * Planifica una ruta entre origen y destino, muestra el resultado y resalta en el panel de dibujo.
     */
     private void planRoute() {
-        int origen = Integer.parseInt(JOptionPane.showInputDialog(this, "ID de origen:"));
-        int destino = Integer.parseInt(JOptionPane.showInputDialog(this, "ID de destino:"));
-        String type = JOptionPane.showInputDialog(this, "Tipo (corta/larga):");
+    int origen = Integer.parseInt(JOptionPane.showInputDialog(this, "ID de origen:"));
+    int destino = Integer.parseInt(JOptionPane.showInputDialog(this, "ID de destino:"));
+    String type = JOptionPane.showInputDialog(this, "Tipo (corta/larga/establecida):");  // Agrega opción "establecida"
 
-        CustomLinkedList<Integer> path;
-        if ("corta".equalsIgnoreCase(type)) {
-            path = graph.shortestPath(origen, destino);
-        } else {
-            path = graph.longestPath(origen, destino);
+    CustomLinkedList<Integer> path = null;
+    
+    if ("establecida".equalsIgnoreCase(type)) {
+        // Buscar ruta establecida que contenga origen y destino
+        path = findEstablishedRoutePath(origen, destino);
+        if (path == null || path.getSize() == 0) {
+            outputArea.append("No se encontró ruta establecida que conecte origen y destino.\n");
+            return;
         }
-
-        if (path.getSize() > 0) {
-            StringBuilder sb = new StringBuilder("Ruta: ");
-            for (int i = 0; i < path.getSize(); i++) {
-                sb.append(getStopNameById(path.getAt(i))).append(" -> ");
-            }
-            outputArea.append(sb.toString() + "\n");
-            panelDibujo.setSelectedRoutePath(path);  // Asume que este método existe en PanelDibujo
-            panelDibujo.repaint();
-        } else {
-            outputArea.append("No se encontró ruta.\n");
-        }
+    } else if ("corta".equalsIgnoreCase(type)) {
+        path = graph.findPath(origen, destino);
+    } else if ("larga".equalsIgnoreCase(type)) {
+        path = graph.longestPath(origen, destino);
     }
+
+    if (path != null && path.getSize() > 0) {
+        StringBuilder sb = new StringBuilder("Ruta: ");
+        for (int i = 0; i < path.getSize(); i++) {
+            sb.append(getStopNameById(path.getAt(i))).append(" -> ");
+        }
+        outputArea.append(sb.toString() + "\n");
+        panelDibujo.setSelectedRoutePath(path);  // Resalta en el panel
+        panelDibujo.repaint();
+    } else {
+        outputArea.append("No se encontró ruta.\n");
+    }
+}
+    
+    private CustomLinkedList<Integer> findEstablishedRoutePath(int origen, int destino) {
+    Node<Route> routeNode = routes.getHead();
+    while (routeNode != null) {
+        Route route = routeNode.getData();
+        CustomLinkedList<Integer> stopIds = route.getStopIds();
+        
+        // Encontrar índices de origen y destino en la ruta
+        int origenIndex = -1;
+        int destinoIndex = -1;
+        for (int i = 0; i < stopIds.getSize(); i++) {
+            int stopId = stopIds.getAt(i);
+            if (stopId == origen) origenIndex = i;
+            if (stopId == destino) destinoIndex = i;
+        }
+        
+        // Si ambos existen y origen antes de destino, extraer subpath
+        if (origenIndex != -1 && destinoIndex != -1 && origenIndex < destinoIndex) {
+            CustomLinkedList<Integer> subPath = new CustomLinkedList<>();
+            for (int i = origenIndex; i <= destinoIndex; i++) {
+                subPath.add(stopIds.getAt(i));
+            }
+            return subPath;
+        }
+        
+        routeNode = routeNode.getNext();
+    }
+    return null;  // No encontrado
+}
 
     /**
     * Ordena las paradas alfabéticamente y actualiza la visualización.
     */
     private void sortStops() {
-        Sorter.bubbleSort(stops);
-        outputArea.append("Paradas ordenadas alfabéticamente.\n");
-        showAll();
-        panelDibujo.repaint();
+     String criterio = JOptionPane.showInputDialog(this, "Ordenar por (nombre/id):");
+    String message = "";
+    if ("nombre".equalsIgnoreCase(criterio)) {
+        Sorter.bubbleSort(stops, "nombre");
+        message = "Paradas ordenadas alfabéticamente por nombre.\n";
+    } else if ("id".equalsIgnoreCase(criterio)) {
+        Sorter.bubbleSort(stops, "id");
+        message = "Paradas ordenadas numéricamente por ID.\n";
+    } else {
+        outputArea.append("Criterio inválido. Usa 'nombre' o 'id'.\n");
+        return;
     }
+    showAll(message);  // Muestra el mensaje + toda la info
+    panelDibujo.repaint();
+}
 
     /**
     * Guarda los datos en archivo y cierra la aplicación.

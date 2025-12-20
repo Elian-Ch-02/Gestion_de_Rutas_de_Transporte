@@ -236,14 +236,4 @@ private void updateReverseWeight(int from, int to, int newWeight) {
         visited.remove(current);
         path.remove(current);
     }
-
-    /**
-     * Encuentra la ruta más corta (pendiente de implementación).
-     * @param origen ID de origen.
-     * @param destino ID de destino.
-     * @return Lista de IDs en la ruta.
-     */
-    public CustomLinkedList<Integer> shortestPath(int origen, int destino) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 }
